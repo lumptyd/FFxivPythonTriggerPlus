@@ -1,55 +1,67 @@
 Python Trigger
 ====
+This is not mine, nor do I take any damn credit for it, Google translated some shit, and thats about it...so use how ever you feel, and if it breaks, or does not work as intended, well, I am not your guy (lazy as hell, I know, but...whatever.  I at least own up to it).  The translations for each section will be posted under the bullet points, and if you are able to provide a better translation, feel free.  
 
-简介
+
+Introduction
 --
-> * Python Trigger 是一个以 python 编写，提供基于事件回调触发其他事件的触发器框架，本身不会提供任何独立功能，但可以为你节省编写功能插件结构的时间
-> * 你可以选择用任何你熟悉的语言编写插件 —— 只要最后可以对接上 python 的接口
+
+> * Python Trigger is a trigger framework written in python that provides a trigger framework for triggering other events based on event callbacks. It does not provide any independent functions by itself, but it can save you the time of writing function plug-in structures.
+
+> * You can choose to write plug-ins in any language you are familiar with-as long as you can connect to the python interface at the end
 
 Hello World
 --
-> * Python Trigger 的插件初始拥有三种事件：plugin_onload 、 plugin_onunload 和 plugin_start，继承 FFxivPythonTrigger.PluginBase 实现
-> 
-> 事件 | 用处 
-> --- |:---:
-> plugin_onload| 插件初始化（不建议使用__init__作为初始化）
-> plugin_start | 成功初始化后开始运行插件逻辑（一般用于挂起进程）（需要以async模式编写）
-> plugin_onunload| 插件卸载（关闭运行进程，清理、储存资料）
-> * 同时请设定插件的name作为插件识别用途
-> * 请注意，在plugin_onload中挂起的进程可能造成堵塞其他插件初始化或是主进程将不会等待其完结便结束，因此长期维持的线程建议用plugin_start 进行操作
-* 透过PluginBase的 FPT 属性，可以访问框架提供的一些便利功能
 
-> * 为提供插件间功能的互通，提供插件层面的api注册与使用
+> * The plugin of Python Trigger initially has three events: plugin_onload, plugin_onunload and plugin_start, which are implemented by inheriting FFxivPythonTrigger.PluginBase 
+
+
+> Event | Use
+> --- |:---:
+
+> * Through the FPT attribute of PluginBase, you can access some convenient functions provided by the framework
+
+> * plugin_onload| Plug-in initialization (__init__ is not recommended as initialization)
+
+
+> *  plugin_start | Start running plug-in logic after successful initialization (usually used to suspend the process) (need to be written in async mode)
+
+> * plugin_onunload| Plug-in uninstallation (close the running process, clean up and store data) 
+
+> * At the same time, please set the name of the plug-in as the purpose of plug-in identification
+
+> * Please note that the process that hangs in plugin_onload may block other plugin initialization or the main process will not wait for its completion before ending. Therefore, it is recommended to use plugin_start to operate the thread that is maintained for a long time.
+
+> * In order to provide interoperability between plug-ins, provide plug-in-level API registration and use
 > * self.FPT.api：
 > 
-> 函数| 用处 
+> Function | Use
 > --- |:---:
-> register_attribute(name:string,object:any)| 注册api，让其他程序可以进行调用
-> * 在创建后，其他插件即可透过'self.FPT.api.注册名字'访问该object
-> * 透过该方法注册的api将会在插件卸载后同时卸载
+> register_attribute(name:string,object:any)| Register api so that other programs can call
+> * After creation, other plug-ins can access the object through'self.FPT.api. registered name'
+> * The api registered through this method will be uninstalled at the same time after the plugin is uninstalled
 
-> * 为提供插件数据的持久化，提供storage方法进行规范化的储存方式
+> * In order to provide the persistence of plug-in data, a storage method is provided for standardized storage
 > * self.FPT.storage：
-> 
-> 函数、变量| 用处 
+> > Functions, Variables | Use
 > --- |:---:
-> data| 持久化储存实体，dict属性
-> path| 插件分配的文件夹路径
-> > load()| 将json数据加载至data（加载插件时自动调用）
-> store()| 将data的数据json 处理后进行储存 (插件卸载自动调用）
+> data| Persistent storage entity, dict attribute
+> path| The folder path assigned by the plugin
+>> load()| Load json data to data (automatically called when the plugin is loaded)
+> store()| Store the data json after processing (automatically invoked by plugin uninstallation)
+> 
+> * In order to normalize the output of the program, log function is provided
+> * self.FPT:
+>
+> Function | Use
+> --- |:---:
+> log(msg:string,level:number=logging.info)| Print the log at print_level or above of the level logger (the default is logging.info) and write it into the log file (seems not written yet)
 
-> * 为对程序的输出进行规范化，提供log函数
-> * self.FPT：
-> 
-> 函数| 用处 
+> * Plug-in functions can be roughly divided into two types: one, create an event, and two, respond to an event
+> * self.FPT:
+>
+> Function | Use
 > --- |:---:
-> log(msg:string,level:number=logging.info)| 列印在等级logger 的 print_level 或以上的log(默认为logging.info)并且写进log文件（好像还没写）
-
-> * 插件功能大体上可以分为两种 ： 一，创建事件、二，响应事件
-> * self.FPT：
-> 
-> 函数| 用处 
-> --- |:---:
-> process_event(event:FFxivPythonTrigger.EventBase)| 传入一个事件object，透过事件的id属性进行分发
-> register_event(event_id:any, callback:callable)| 注册一个该事件id的回调，回调将传入该事件object，建议为async function
-> * 注册的事件回调将会在插件卸载后同时卸载
+> process_event(event:FFxivPythonTrigger.EventBase)| Pass in an event object and distribute it through the id attribute of the event
+> register_event(event_id:any, callback:callable)| Register a callback of the event id, the callback will be passed into the event object, it is recommended to be async function
+> * The registered event callback will be uninstalled at the same time after the plugin is uninstalled
