@@ -45,8 +45,8 @@ Hello World
 > * self.FPT.storage：
 >  Functions, Variables | Use
 > --- |:---:
-> data| Persistent storage entity, dict attribute
-> path| The folder path assigned by the plugin
+> * data| Persistent storage entity, dict attribute
+> * path| The folder path assigned by the plugin
 >> load()| Load json data to data (automatically called when the plugin is loaded)
 > store()| Store the data json after processing (automatically invoked by plugin uninstallation)
 > 
