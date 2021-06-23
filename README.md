@@ -43,7 +43,7 @@ Hello World
 
 > * In order to provide the persistence of plug-in data, a storage method is provided for standardized storage
 > * self.FPT.storage：
-> > Functions, Variables | Use
+>  Functions, Variables | Use
 > --- |:---:
 > data| Persistent storage entity, dict attribute
 > path| The folder path assigned by the plugin
